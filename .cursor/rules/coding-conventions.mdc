@@ -1,0 +1,77 @@
+---
+description: Coding conventions — styled components, i18n, lib abstraction, imports
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Coding conventions
+
+See README.md for rationale and package table.
+
+## Styled components
+
+Every component/page that needs styling has a `*.styled.ts` companion. Never define styled components inside `.tsx` files.
+
+```tsx
+// ✅ AccountPage.tsx
+import * as S from './Account.styled'
+<S.Title>Account</S.Title>
+
+// ❌ inline in .tsx
+const Title = styled.h2``
+```
+
+Import the styled file as a namespace (`* as S`) to distinguish styled elements from components at a glance.
+
+## lib abstraction
+
+Import from `@lib/` wrappers, not directly from packages:
+
+```tsx
+// ✅
+import { useNavigate } from '@lib/router'
+import { useQuery } from '@lib/query'
+import { useAppTranslation } from '@lib/i18n'
+
+// ❌
+import { useNavigate } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+```
+
+Exceptions: `styled-components`, `react`, `react-dom` — import directly.
+
+## i18n
+
+Use English phrases as keys. Wrap every user-visible string in `t()`.
+
+```tsx
+const { t } = useAppTranslation()
+
+t('Save changes')   // ✅ — English phrase as key
+t('actions.save')   // ❌ — structured key
+```
+
+Where hooks are not available (utils, config files), use `extractKey` to mark strings for extraction, then call `t()` with the value in the component:
+
+```ts
+// config.ts
+import { extractKey } from '@lib/i18n'
+export const MESSAGES = { required: extractKey('This field is required') }
+
+// Component
+t(MESSAGES.required)
+```
+
+Do not edit translation files manually — the pre-commit hook runs `i18n:extract` automatically.
+
+## Import order
+
+ESLint enforces three groups separated by blank lines, alphabetical within each:
+
+```tsx
+import { useState } from 'react'              // 1. external
+
+import { useAppTranslation } from '@lib/i18n' // 2. @alias
+
+import * as S from './Foo.styled'             // 3. relative
+```

@@ -1,0 +1,41 @@
+---
+description: Project architecture, layer responsibilities, and import rules
+alwaysApply: true
+---
+
+# Project architecture
+
+See README.md for the full directory map.
+
+## Layer responsibilities
+
+- `api/{resource}/` — HTTP only: fetch functions + request/response types. No React.
+- `data/` — TanStack Query hooks and query keys. Imports from `@api/`, not from features.
+- `components/` — Shared UI primitives. No imports from `@app/` or `@features/`.
+- `features/{Feature}/` — Everything for one feature: page, sub-components, hooks, styles.
+- `app/` — Wires it all together: routes, providers, navigation.
+- `lib/` — Thin wrappers re-exporting third-party packages. All app code imports from here.
+- `models/` — Domain types only. All entities extend `BaseEntity` from `models/base.ts`.
+
+## Import direction
+
+```
+app → features → components / data / api → lib / models / theme
+```
+
+No layer imports from a layer above it. `components/` never imports from `features/` or `app/`.
+
+## Feature isolation
+
+To remove a feature: delete its folder, remove it from `app/routes` and `app/navigation`. Nothing else should reference it.
+
+## API models
+
+```
+api/models.ts           → ApiItemResponse<T>, ApiListResponse<T>, ApiError
+api/{resource}/
+  apiModels.ts          → ResourceResponse, UpdateResourcePayload (extends api/models)
+  index.ts              → fetch functions using apiModels types
+```
+
+`UpdatePayload` omits `id` — it is never sent in the request body.

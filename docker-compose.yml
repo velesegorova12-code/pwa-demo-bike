@@ -1,0 +1,23 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+      args:
+        - VITE_API_BASE_URL=http://localhost:4000/api
+    container_name: cycle_route_planner_frontend
+    restart: unless-stopped
+    ports:
+      - '3000:8080'
+    networks:
+      - cycle_route_planner_network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
+networks:
+  cycle_route_planner_network:
+    driver: bridge
