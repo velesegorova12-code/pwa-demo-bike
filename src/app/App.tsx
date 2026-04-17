@@ -3,21 +3,24 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { NotificationToast, ErrorType } from '../components/notifications/NotificationToast'
 
 export const App: React.FC = () => {
-  // We set the initial state based on current navigator status to avoid setState in useEffect
   const [activeError, setActiveError] = useState<ErrorType | null>(
     typeof navigator !== 'undefined' && !navigator.onLine ? 'offline' : null,
   )
 
-  const handleClose = useCallback(() => setActiveError(null), [])
+  const handleClose = useCallback(() => {
+    setActiveError(null)
+  }, [])
+
+  const handleTestServerError = useCallback(() => {
+    setActiveError('server_error')
+  }, [])
 
   useEffect(() => {
     const updateOnlineStatus = () => {
       setActiveError(navigator.onLine ? null : 'offline')
     }
-
     window.addEventListener('online', updateOnlineStatus)
     window.addEventListener('offline', updateOnlineStatus)
-
     return () => {
       window.removeEventListener('online', updateOnlineStatus)
       window.removeEventListener('offline', updateOnlineStatus)
@@ -28,47 +31,56 @@ export const App: React.FC = () => {
     <div
       style={{
         minHeight: '100vh',
-        backgroundColor: '#f9fafb',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        backgroundColor: '#f3f4f6',
+        fontFamily: 'sans-serif',
       }}
     >
       <NotificationToast errorType={activeError} onClose={handleClose} />
 
       <div
         style={{
-          textAlign: 'center',
-          padding: '24px',
+          padding: '40px',
           background: '#ffffff',
           borderRadius: '16px',
-          border: '1px solid #e5e7eb',
+          textAlign: 'center',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
         }}
       >
-        <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#111827', marginBottom: '8px' }}>
-          Navigation System
+        <h1 style={{ fontSize: '24px', fontWeight: 700, marginBottom: '24px' }}>
+          Cycle Planner Debug
         </h1>
-        <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '24px' }}>
-          Simulator Mode: Active
-        </p>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {(['gps_lost', 'off_course', 'rerouting'] as ErrorType[]).map((type) => (
-            <button
-              key={type}
-              onClick={() => setActiveError(type)}
-              style={{
-                padding: '10px 16px',
-                cursor: 'pointer',
-                borderRadius: '8px',
-                border: '1px solid #d1d5db',
-                backgroundColor: '#ffffff',
-                fontWeight: 500,
-              }}
-            >
-              Simulate {type.replace('_', ' ')}
-            </button>
-          ))}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <button
+            onClick={handleTestServerError}
+            style={{
+              padding: '12px',
+              backgroundColor: '#111827',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontWeight: 600,
+            }}
+          >
+            Test 500 Error (Gretlin's Case)
+          </button>
+
+          <button
+            onClick={() => setActiveError('gps_lost')}
+            style={{
+              padding: '10px',
+              backgroundColor: '#fff',
+              border: '1px solid #d1d5db',
+              borderRadius: '8px',
+              cursor: 'pointer',
+            }}
+          >
+            Simulate GPS Lost
+          </button>
         </div>
       </div>
     </div>
