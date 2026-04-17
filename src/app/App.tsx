@@ -11,6 +11,16 @@ export const App: React.FC = () => {
     setActiveError(null)
   }, [])
 
+  // Auto-dismiss logic: hides the toast after 5 seconds
+  useEffect(() => {
+    if (activeError && activeError !== 'server_error' && activeError !== 'offline') {
+      const timer = setTimeout(() => {
+        setActiveError(null)
+      }, 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [activeError])
+
   useEffect(() => {
     const updateOnlineStatus = () => {
       setActiveError(navigator.onLine ? null : 'offline')
@@ -28,7 +38,6 @@ export const App: React.FC = () => {
   return (
     <div className="app-main-layout">
       <NotificationToast errorType={activeError} onClose={handleClose} />
-      {/* Map and other components will be integrated here */}
     </div>
   )
 }
