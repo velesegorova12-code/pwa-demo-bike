@@ -11,7 +11,6 @@ export const App: React.FC = () => {
     setActiveError(null)
   }, [])
 
-  // Auto-dismiss logic: hides the toast after 5 seconds
   useEffect(() => {
     if (activeError && activeError !== 'server_error' && activeError !== 'offline') {
       const timer = setTimeout(() => {
@@ -22,16 +21,12 @@ export const App: React.FC = () => {
   }, [activeError])
 
   useEffect(() => {
-    const updateOnlineStatus = () => {
-      setActiveError(navigator.onLine ? null : 'offline')
-    }
-
-    window.addEventListener('online', updateOnlineStatus)
-    window.addEventListener('offline', updateOnlineStatus)
-
+    const updateStatus = () => setActiveError(navigator.onLine ? null : 'offline')
+    window.addEventListener('online', updateStatus)
+    window.addEventListener('offline', updateStatus)
     return () => {
-      window.removeEventListener('online', updateOnlineStatus)
-      window.removeEventListener('offline', updateOnlineStatus)
+      window.removeEventListener('online', updateStatus)
+      window.removeEventListener('offline', updateStatus)
     }
   }, [])
 
