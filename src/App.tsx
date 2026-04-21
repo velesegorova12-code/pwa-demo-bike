@@ -1,8 +1,8 @@
 import { Toaster } from 'react-hot-toast';
 
-import { AppHeaderActions } from './components/AppHeaderActions';
-import { AppLayout } from './components/AppLayout';
-import { Map } from './components/Map';
+import { AppHeaderActions } from './components/Layout/AppHeaderActions';
+import { AppLayout } from './components/Layout/AppLayout';
+import { Map } from './components/Map/Map';
 
 function App() {
   return (
