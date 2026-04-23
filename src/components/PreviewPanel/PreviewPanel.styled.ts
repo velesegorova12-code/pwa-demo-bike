@@ -136,29 +136,3 @@ export const ErrorMessage = styled.p`
   font-size: 0.95rem;
   margin: 0;
 `
-
-// CTA Button - full width at bottom
-export const CTAButton = styled.button`
-  width: 100%;
-  padding: ${({ theme }) => `${theme.spacing(3)} ${theme.spacing(4)}`};
-  background: ${({ theme }) => theme.colors.primary};
-  color: white;
-  border: none;
-  border-radius: ${({ theme }) => theme.radius.md};
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition:
-    transform 120ms ease,
-    box-shadow 120ms ease;
-  box-shadow: ${({ theme }) => theme.shadow.sm};
-
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: ${({ theme }) => theme.shadow.md};
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-`
