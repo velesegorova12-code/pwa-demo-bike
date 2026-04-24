@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { AppHeaderActions } from '@app/navigation/AppHeaderActions'
 import { AppLayout } from '@components/Layout'
@@ -10,6 +10,23 @@ function App() {
   const [activeError, setActiveError] = useState<ErrorType | null>(null)
 
   const handleClose = () => setActiveError(null)
+
+  useEffect(() => {
+    const handleError = (event: Event) => {
+      const customEvent = event as CustomEvent<ErrorType>
+      setActiveError(customEvent.detail)
+    }
+
+    window.addEventListener('app-error', handleError as EventListener)
+
+    const handleOffline = () => setActiveError('offline')
+    window.addEventListener('offline', handleOffline)
+
+    return () => {
+      window.removeEventListener('app-error', handleError as EventListener)
+      window.removeEventListener('offline', handleOffline)
+    }
+  }, [])
 
   return (
     <AppLayout headerActions={<AppHeaderActions />}>
