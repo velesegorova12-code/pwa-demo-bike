@@ -12,6 +12,14 @@ function App() {
   const handleClose = () => setActiveError(null)
 
   useEffect(() => {
+    // 5s auto-dismiss for non-critical alerts (GPS, Off-course, Rerouting)
+    if (activeError && activeError !== 'server_error' && activeError !== 'offline') {
+      const timer = setTimeout(() => setActiveError(null), 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [activeError])
+
+  useEffect(() => {
     const handleError = (event: Event) => {
       const customEvent = event as CustomEvent<ErrorType>
       setActiveError(customEvent.detail)
