@@ -5,7 +5,6 @@ import { useAppTranslation } from '@lib/i18n'
 import {
   BackdropOverlay,
   CloseButton,
-  CTAButton,
   ErrorMessage,
   InfoItem,
   InfoLabel,
@@ -18,6 +17,7 @@ import {
   Spinner,
   SpinnerWrapper,
 } from './PreviewPanel.styled'
+import { formatDistance, formatETA } from '../Map/routeFormatters'
 import type { RouteMetadata, RouteStatus } from '../Map/useRoute'
 
 type Props = {
@@ -25,33 +25,10 @@ type Props = {
   status: RouteStatus
   error: string | null
   collapsed: boolean
-  onStartNavigation: () => void
   onCollapse: () => void
 }
 
-function formatETA(etaSeconds: number): string {
-  const totalMinutes = Math.round(etaSeconds / 60)
-  if (totalMinutes < 60) {
-    return `${totalMinutes} min`
-  }
-  const hours = Math.floor(totalMinutes / 60)
-  const minutes = totalMinutes % 60
-  return `${hours}h ${minutes}m`
-}
-
-function formatDistance(distanceMeters: number): string {
-  const km = distanceMeters / 1000
-  return `${km.toFixed(1)} km`
-}
-
-export function PreviewPanel({
-  metadata,
-  status,
-  error,
-  collapsed,
-  onStartNavigation,
-  onCollapse,
-}: Props) {
+export function PreviewPanel({ metadata, status, error, collapsed, onCollapse }: Props) {
   const { t } = useAppTranslation()
 
   // Panel is visible when status is success, loading, or error (not idle)
@@ -94,19 +71,16 @@ export function PreviewPanel({
           {status === 'error' && error && <ErrorMessage>{error}</ErrorMessage>}
 
           {status === 'success' && metadata && (
-            <>
-              <RouteInfo>
-                <InfoItem>
-                  <InfoLabel>{t('Distance')}</InfoLabel>
-                  <InfoValue>{formatDistance(metadata.distanceMeters)}</InfoValue>
-                </InfoItem>
-                <InfoItem>
-                  <InfoLabel>{t('ETA')}</InfoLabel>
-                  <InfoValue>{formatETA(metadata.etaSeconds)}</InfoValue>
-                </InfoItem>
-              </RouteInfo>
-              <CTAButton onClick={onStartNavigation}>{t('Start Navigation')}</CTAButton>
-            </>
+            <RouteInfo>
+              <InfoItem>
+                <InfoLabel>{t('Distance')}</InfoLabel>
+                <InfoValue>{formatDistance(metadata.distanceMeters)}</InfoValue>
+              </InfoItem>
+              <InfoItem>
+                <InfoLabel>{t('ETA')}</InfoLabel>
+                <InfoValue>{formatETA(metadata.etaSeconds)}</InfoValue>
+              </InfoItem>
+            </RouteInfo>
           )}
         </PanelContent>
       </PreviewPanelContainer>
