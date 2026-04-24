@@ -1,6 +1,22 @@
 import styled from 'styled-components'
 
-export const ToastContainer = styled.div<{ $isVisible: boolean }>`
+import { type ErrorType } from './NotificationToast'
+
+const getBgColor = (type: ErrorType | null): string => {
+  switch (type) {
+    case 'offline':
+    case 'server_error':
+      return '#ff4d4f' // Red for critical
+    case 'gps_lost':
+    case 'off_course':
+    case 'rerouting':
+      return '#faad14' // Orange/Yellow for warnings
+    default:
+      return '#ff4d4f'
+  }
+}
+
+export const ToastContainer = styled.div<{ $isVisible: boolean; $errorType: ErrorType | null }>`
   position: fixed;
   top: 20px;
   left: 50%;
@@ -8,7 +24,7 @@ export const ToastContainer = styled.div<{ $isVisible: boolean }>`
   z-index: 1000;
   display: ${(props) => (props.$isVisible ? 'flex' : 'none')};
   align-items: center;
-  background-color: #ff4d4f;
+  background-color: ${(props) => getBgColor(props.$errorType)};
   color: white;
   padding: 12px 24px;
   border-radius: 8px;
@@ -16,6 +32,7 @@ export const ToastContainer = styled.div<{ $isVisible: boolean }>`
   font-weight: 600;
   min-width: 300px;
   justify-content: space-between;
+  transition: background-color 0.3s ease;
 `
 
 export const CloseButton = styled.button`
