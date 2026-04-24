@@ -30,7 +30,6 @@
     "react": "19.2.5",
     "react-dom": "19.2.5",
     "react-hook-form": "^7.54.2",
-    "react-hot-toast": "^2.6.0",
     "react-i18next": "^15.4.0",
     "react-map-gl": "^8.1.0",
     "react-router-dom": "^7.1.5",
