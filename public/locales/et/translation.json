@@ -16,6 +16,9 @@
   "Loading…": "et",
   "Manage your profile and preferences.": "et",
   "New password": "et",
+  "notifications": {
+    "close": "Sulge"
+  },
   "Password": "et",
   "Permanently delete your account and all associated data.": "et",
   "Personal information": "et",
