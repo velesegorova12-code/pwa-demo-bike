@@ -16,7 +16,7 @@ export const NotificationToast: React.FC<Props> = ({ errorType, onClose }) => {
   if (!errorType) return null
 
   return (
-    <S.ToastContainer $isVisible={!!errorType}>
+    <S.ToastContainer $isVisible={!!errorType} $errorType={errorType}>
       <span>{t(`notifications.${errorType}`)}</span>
       <S.CloseButton onClick={onClose}>{t('notifications.close')}</S.CloseButton>
     </S.ToastContainer>
