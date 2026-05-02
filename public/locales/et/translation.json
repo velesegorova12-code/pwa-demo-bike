@@ -10,8 +10,9 @@
   "Current password": "Praegune parool",
   "Danger zone": "Ettevaatust",
   "Delete account": "Kustuta konto",
-  "Distance": "et",
+  "Distance": "Vahemaa",
   "Email": "E-post",
+  "End ride": "Lõpeta sõit",
   "ETA": "et",
   "First name": "Eesnimi",
   "Follow the route": "Järgi teekonda",
@@ -24,6 +25,7 @@
   "Long-press map to set start and destination": "Vajuta kaardil pikalt, et määrata algus- ja sihtpunkt",
   "Manage your profile and preferences.": "Halda oma profiili ja eelistusi.",
   "New password": "Uus parool",
+  "notifications": { "close": "Sulge" },
   "Password": "Parool",
   "Permanently delete your account and all associated data.": "Kustuta oma konto ja kõik seotud andmed jäädavalt.",
   "Personal information": "Isikuandmed",
@@ -36,9 +38,10 @@
   "Set as start": "Määra alguspunktiks",
   "Sign in to see role-based content on this page.": "Logi sisse, et näha sellel lehel rollipõhist sisu.",
   "Signed in as {{name}} ({{role}})": "Sisse logitud kui {{name}} ({{role}})",
+  "Time": "Aeg",
   "Update password": "Uuenda parool",
   "You are off route. Re-routing…": "Kaldusid rajalt kõrval. Ümbersuunamine…",
   "You are signed in as an editor. Admin tools are not visible to this role — sign in as Admin to see the difference.": "Oled sisse logitud toimetajana. Administraatori tööriistad ei ole sellele rollile nähtavad — logi sisse administraatorina, et näha erinevust.",
-  "You have manage:account permission. In a real app this section would surface user management, audit logs, and other admin tools.": "Sul on manage:account õigus. Päris rakenduses kuvataks siin kasutajahaldust, auditiloge ja muid administraatori tööriistu."
-  ,"notifications": { "close": "Sulge" }
+  "You have manage:account permission. In a real app this section would surface user management, audit logs, and other admin tools.": "Sul on manage:account õigus. Päris rakenduses kuvataks siin kasutajahaldust, auditiloge ja muid administraatori tööriistu.",
+  "You've arrived!": "Oled kohal!"
 }

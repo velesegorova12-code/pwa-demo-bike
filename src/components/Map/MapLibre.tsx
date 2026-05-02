@@ -64,7 +64,7 @@ const TALLINN_CENTER = {
   zoom: 12,
 }
 
-const MAP_STYLE = 'https://tiles.openfreemap.org/styles/bright'
+const MAP_STYLE = 'https://demotiles.maplibre.org/style.json'
 
 const LONG_PRESS_MS = 400
 const LONG_PRESS_MOVE_THRESHOLD = 10
@@ -189,6 +189,14 @@ const MapLibre = () => {
    * Navigation mode hook — manages fullscreen, map following, and bearing rotation.
    * See useNavigationMode.ts for the full implementation.
    */
+
+  // Pass isNavigating so rerouting is immediate during active ride, 10s delay otherwise
+  const { displayPosition, isOffRoute, shouldReroute, hasArrived } = useRouteTracking(
+    position,
+    route,
+    false,
+  )
+
   const {
     isNavigating,
     autoFollow,
@@ -198,13 +206,6 @@ const MapLibre = () => {
     handleUserInteraction,
     showRouteOverview,
   } = useNavigationMode(mapRef, position, heading, route)
-
-  // Pass isNavigating so rerouting is immediate during active ride, 10s delay otherwise
-  const { displayPosition, isOffRoute, shouldReroute } = useRouteTracking(
-    position,
-    route,
-    isNavigating,
-  )
 
   const initialViewState = position
     ? { latitude: position.latitude, longitude: position.longitude, zoom: 14 }
@@ -253,14 +254,14 @@ const MapLibre = () => {
   // Auto-set start from GPS when it first becomes available
   useEffect(() => {
     if (position && !start && !userSetStartManually) {
-      setStart({ lat: position.latitude, lon: position.longitude })
+      setStart({ lat: position?.latitude, lon: position?.longitude })
     }
   }, [position, start, userSetStartManually, setStart])
 
   // Keep GPS start in sync while no route is active
   useEffect(() => {
     if (position && !route && !userSetStartManually) {
-      setStart({ lat: position.latitude, lon: position.longitude })
+      setStart({ lat: position?.latitude, lon: position?.longitude })
     }
   }, [position, route, userSetStartManually, setStart])
 
@@ -311,7 +312,7 @@ const MapLibre = () => {
 
     const destination = { lat: end.lat, lon: end.lon }
     clearRoute()
-    setStart({ lat: position.latitude, lon: position.longitude })
+    setStart({ lat: position?.latitude, lon: position?.longitude })
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setUserSetStartManually(false)
     startFetching()
@@ -339,7 +340,7 @@ const MapLibre = () => {
     startFetching()
 
     if (!start && position && !userSetStartManually) {
-      setStart({ lat: position.latitude, lon: position.longitude })
+      setStart({ lat: position?.latitude, lon: position?.longitude })
       pendingEndRef.current = popupPoint
     } else {
       clearRoute()
@@ -461,7 +462,7 @@ const MapLibre = () => {
   const hint = getHint(t, permission, !!route, isOffRoute && !shouldReroute, isLoading, !!start)
   const errorHint = geoError && !position ? ` — ${geoError}` : ''
   const markerPos = displayPosition ?? position
-
+  console.log('--- DATA CHECK ---', { position, start, end, markerPos })
   /** Whether the route is ready and the user hasn't entered navigation yet. */
   const showLetsRide = !!route && status === 'success' && !isNavigating
 
@@ -530,7 +531,11 @@ const MapLibre = () => {
 
           {/* Start waypoint pin — only in planning mode when manually set */}
           {!isNavigating && start && userSetStartManually && (
-            <Marker latitude={start.lat} longitude={start.lon} anchor="bottom">
+            <Marker
+              latitude={start.lat ?? 59.4372}
+              longitude={start.lon ?? 24.7535}
+              anchor="bottom"
+            >
               <LocationPin>
                 <WaypointPinDot $color={START_COLOR}>
                   <WaypointIcon>🟢</WaypointIcon>
@@ -546,7 +551,7 @@ const MapLibre = () => {
            * so the user can see where the route ends.
            */}
           {end && (!isNavigating || !autoFollow) && (
-            <Marker latitude={end.lat} longitude={end.lon} anchor="bottom">
+            <Marker latitude={end.lat ?? 59.4372} longitude={end.lon ?? 24.7535} anchor="bottom">
               <LocationPin>
                 <WaypointPinDot $color={DESTINATION_COLOR}>
                   <WaypointIcon>🏁</WaypointIcon>
@@ -559,8 +564,8 @@ const MapLibre = () => {
           {/* Long-press popup — works in both planning and navigation mode */}
           {popupPoint && (
             <Popup
-              latitude={popupPoint.lat}
-              longitude={popupPoint.lon}
+              latitude={popupPoint.lat ?? 59.4372}
+              longitude={popupPoint.lon ?? 24.7535}
               anchor="bottom"
               closeButton={false}
               closeOnClick={false}
@@ -638,6 +643,7 @@ const MapLibre = () => {
         {isNavigating && (
           <ActiveRide
             autoFollow={autoFollow}
+            hasArrived={hasArrived}
             totalDistance={metadata ? formatDistance(metadata.distanceMeters) : undefined}
             totalTime={metadata ? formatETA(metadata.etaSeconds) : undefined}
             remainingDistance={metadata ? formatDistance(metadata.distanceMeters) : undefined}

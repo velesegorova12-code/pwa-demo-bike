@@ -1,0 +1,5 @@
+content = open('src/components/Map/useRouteTracking.ts').read()
+content = content.replace('[snapped.properties](http://snapped.properties)', 'snapped.properties')
+content = content.replace('[Date.now](http://Date.now)', 'Date.now')
+open('src/components/Map/useRouteTracking.ts', 'w').write(content)
+print('Done')

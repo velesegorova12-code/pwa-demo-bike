@@ -253,3 +253,25 @@ export const LetsRideButton = styled.button`
     box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);
   }
 `
+
+export const ArrivalCard = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 24px;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  z-index: 1000;
+`
+
+export const ArrivalHeader = styled.h2`
+  margin: 0;
+  font-size: 20px;
+  color: #333;
+`
